@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, query, where } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDE0eYMJ_eEOOGZfoSRoPiIl79jPIEQ_AM",
@@ -19,8 +19,11 @@ const db = getFirestore();
 // collection ref
 const collectionRef = collection(db, "books");
 
+// queries
+const q = query(collectionRef, where("author", "==", "rafa"));
+
 // real time collection data
-onSnapshot(collectionRef, (snapshot) => {
+onSnapshot(q, (snapshot) => {
   const books = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   console.log(books);
 });
