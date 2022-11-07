@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDE0eYMJ_eEOOGZfoSRoPiIl79jPIEQ_AM",
@@ -26,3 +26,21 @@ getDocs(collectionRef)
     console.log(books);
   })
   .catch(console.log);
+
+// adding docs
+const addBookForm = document.querySelector(".add");
+addBookForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  addDoc(collectionRef, { title: addBookForm.title.value, author: addBookForm.author.value }).then(() => addBookForm.reset());
+});
+
+// deleting docs
+const deleteBookForm = document.querySelector(".delete");
+deleteBookForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const docRef = doc(db, "books", deleteBookForm.id.value);
+
+  deleteDoc(docRef).then(() => deleteBookForm.reset());
+});
