@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, query, where } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, query, orderBy, serverTimestamp } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDE0eYMJ_eEOOGZfoSRoPiIl79jPIEQ_AM",
@@ -20,7 +20,7 @@ const db = getFirestore();
 const collectionRef = collection(db, "books");
 
 // queries
-const q = query(collectionRef, where("author", "==", "rafa"));
+const q = query(collectionRef, orderBy("createdAt"));
 
 // real time collection data
 onSnapshot(q, (snapshot) => {
@@ -33,7 +33,11 @@ const addBookForm = document.querySelector(".add");
 addBookForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  addDoc(collectionRef, { title: addBookForm.title.value, author: addBookForm.author.value }).then(() => addBookForm.reset());
+  addDoc(collectionRef, {
+    title: addBookForm.title.value,
+    author: addBookForm.author.value,
+    createdAt: serverTimestamp(),
+  }).then(() => addBookForm.reset());
 });
 
 // deleting docs
